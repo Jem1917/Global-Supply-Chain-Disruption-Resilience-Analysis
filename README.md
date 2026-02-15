@@ -509,14 +509,6 @@ This project demonstrates:
 - **Financial Planning:** Budget forecasting, scenario modeling
 - **Strategic Decision-Making:** Network design, vendor diversification
 
-### Interview Talking Points
-When discussing this project:
-1. **Technical depth:** Explain 3NF normalization and why it matters
-2. **Business impact:** Lead with the $947K cost savings opportunity
-3. **Complex queries:** Walk through Query 10 (window functions + CTEs)
-4. **Trade-offs:** Discuss Sea vs Air cost-benefit analysis (Query 15)
-5. **Scalability:** Describe how to add real-time data feeds
-
 ---
 
 ## 🔮 Future Enhancements
