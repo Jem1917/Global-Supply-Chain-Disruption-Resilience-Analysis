@@ -123,28 +123,11 @@ This project provides a comprehensive SQL-based analysis framework to:
 supply-chain-analysis/
 │
 ├── sql/
-│   ├── 01_database_setup.sql              # Database creation & table schemas
-│   ├── 02_data_normalization.sql          # Data import & normalization process
-│   ├── 03_disruption_analysis.sql         # Queries 1-4: Disruption patterns
-│   ├── 04_risk_assessment.sql             # Queries 5-8: Risk quantification
-│   ├── 05_route_performance.sql           # Queries 9-12: Route optimization
-│   ├── 06_cost_optimization.sql           # Queries 13-16: Financial analysis
-│   ├── 07_mitigation_effectiveness.sql    # Queries 17-20: Strategy evaluation
-│   ├── 08_advanced_analytics.sql          # Bonus queries (window functions, CTEs)
-│   └── 09_executive_dashboard.sql         # KPI summary & views
+│   ├── supply_chain.sql      
 │
 ├── data/
-│   ├── supply_chain_dataset.csv           # Raw data (link to Kaggle)
-│   └── data_dictionary.md                 # Column descriptions & metadata
-│
-├── results/
-│   ├── query_results.xlsx                 # Sample outputs from key queries
-│   └── executive_summary.pdf              # Key findings presentation
-│
-├── documentation/
-│   ├── query_catalog.md                   # Index of all 20+ queries
-│   ├── business_insights.md               # Detailed analysis & recommendations
-│   └── schema_diagram.png                 # ERD visual
+│   ├── global_supply_chain_disruption_v1.csv           
+│   └── data_dictionary_1.md                 
 │
 ├── .gitignore
 ├── README.md
