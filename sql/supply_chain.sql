@@ -2,7 +2,7 @@
 --           GLOBAL SUPPLY CHAIN DISRUPTION & RESILIENCE ANALYSIS
 --                          MySQL PROJECT
 -- ═══════════════════════════════════════════════════════════════════════════
--- Author: [Your Name]
+-- Author: A S PRAISIE JEMIMAH
 -- MSc Statistics Graduate
 -- Date: January 2026
 -- 
@@ -36,6 +36,7 @@ CREATE TABLE routes (
     UNIQUE KEY unique_route (origin_city, destination_city)
 );
 drop table routes;
+select * from routes;
 
 
 -- Table 2: Products Master Table
@@ -44,6 +45,7 @@ CREATE TABLE products (
     product_category VARCHAR(100) NOT NULL UNIQUE
 );
 drop table products;
+select * from products;
 
 -- Table 3: Shipments Fact Table
 CREATE TABLE shipments (
@@ -62,6 +64,8 @@ CREATE TABLE shipments (
     INDEX idx_delivery_status (delivery_status)
 );
 drop table shipments;
+select * from shipments;
+
 -- Table 4: Disruptions Table
 CREATE TABLE disruptions (
     disruption_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,7 +77,10 @@ CREATE TABLE disruptions (
     FOREIGN KEY (shipment_id) REFERENCES shipments(shipment_id),
     INDEX idx_disruption_event (disruption_event)
 );
+select * from disruptions;
 drop table disruptions;
+
+
 -- Table 5: Mitigations Table
 CREATE TABLE mitigations (
     mitigation_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,6 +89,7 @@ CREATE TABLE mitigations (
     FOREIGN KEY (shipment_id) REFERENCES shipments(shipment_id)
 );
 drop table mitigations;
+select * from mitigations;
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- SECTION 3: DATA IMPORT FROM CSV
@@ -268,18 +276,19 @@ ORDER BY d.disruption_event, shipment_count DESC;
 -- Business Value: Identify seasonal patterns for capacity planning
 SELECT 
     '3. Monthly Disruption Trends' as analysis;
+    
 
 SELECT 
     YEAR(s.order_date) as year,
     MONTH(s.order_date) as month,
-    DATE_FORMAT(s.order_date, '%Y-%m') as year_month,
+    DATE_FORMAT(s.order_date, '%Y-%m') as yearmonth,
     d.disruption_event,
     COUNT(*) as disruption_count,
     ROUND(AVG(d.delay_days), 2) as avg_delay
 FROM shipments s
 JOIN disruptions d ON s.shipment_id = d.shipment_id
 WHERE d.disruption_event IS NOT NULL
-GROUP BY year, month, year_month, d.disruption_event
+GROUP BY year, month, yearmonth, d.disruption_event
 ORDER BY year, month, disruption_count DESC;
 
 -- QUERY 4: Routes most vulnerable to disruptions
@@ -770,23 +779,23 @@ SELECT
 
 WITH monthly_delays AS (
     SELECT 
-        DATE_FORMAT(s.order_date, '%Y-%m') as year_month,
+        DATE_FORMAT(s.order_date, '%Y-%m') as yearmonth,
         SUM(d.delay_days) as total_delay_days,
         COUNT(*) as shipment_count,
         ROUND(AVG(d.delay_days), 2) as avg_delay
     FROM shipments s
     JOIN disruptions d ON s.shipment_id = d.shipment_id
-    GROUP BY year_month
+    GROUP BY yearmonth
 )
 SELECT 
-    year_month,
+    yearmonth,
     shipment_count,
     total_delay_days,
     avg_delay,
-    SUM(total_delay_days) OVER (ORDER BY year_month) as running_total_delays,
-    ROUND(AVG(avg_delay) OVER (ORDER BY year_month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) as three_month_moving_avg
+    SUM(total_delay_days) OVER (ORDER BY yearmonth) as running_total_delays,
+    ROUND(AVG(avg_delay) OVER (ORDER BY yearmonth ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) as three_month_moving_avg
 FROM monthly_delays
-ORDER BY year_month;
+ORDER BY yearmonth;
 
 -- BONUS QUERY 2: Customer-centric route reliability score
 SELECT 
@@ -893,7 +902,7 @@ LIMIT 5;
 -- Export 1: Monthly trends for Tableau/Power BI
 CREATE OR REPLACE VIEW v_monthly_trends AS
 SELECT 
-    DATE_FORMAT(s.order_date, '%Y-%m') as year_month,
+    DATE_FORMAT(s.order_date, '%Y-%m') as yearmonth,
     YEAR(s.order_date) as year,
     MONTH(s.order_date) as month,
     COUNT(*) as shipment_count,
@@ -903,8 +912,8 @@ SELECT
     COUNT(DISTINCT d.disruption_event) as unique_disruptions
 FROM shipments s
 JOIN disruptions d ON s.shipment_id = d.shipment_id
-GROUP BY year_month, year, month
-ORDER BY year_month;
+GROUP BY yearmonth, year, month
+ORDER BY yearmonth;
 
 -- Export 2: Route performance summary
 CREATE OR REPLACE VIEW v_route_performance AS
@@ -930,12 +939,5 @@ GROUP BY r.route_id, r.origin_city, r.destination_city, r.route_type;
 
 SELECT 'Analysis Complete!' as status,
        'Total Queries Executed: 20 Business Questions + 3 Bonus + KPI Dashboard' as summary,
-       'Views Created: 2 for visualization tools' as deliverables,
-       'Ready for GitHub upload and resume showcase!' as next_steps;2global_supply_chain_disruption_v1) as avg_severity_index,
-    ROUND(MAX(d.delay_days), 2) as max_delay_days,
-    SUM(CASE WHEN s.delivery_status = 'Late' THEN 1 ELSE 0 END) as late_count
-FROM disruptions d
-JOIN shipments s ON d.shipment_id = s.shipment_id
-GROUP BY weather_category
-ORDER BY avg_severity_index;
+       'Views Created: 2 for visualization tools' as deliverables;
 
